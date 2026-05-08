@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Foot Maroc</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#f5c518;--dark:#0a0a0a;--card:#161616;--card2:#1e1e1e;--border:#2a2a2a;--text:#e0e0e0;--sub:#888}
+body{font-family:'Roboto',sans-serif;background:var(--dark);color:var(--text);min-height:100vh}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:1.3rem;font-weight:900;color:var(--gold);letter-spacing:1px;text-transform:uppercase}
+.logo span{color:#fff}
+.nav-tabs{display:flex;gap:4px}
+.tab-btn{background:none;border:none;color:var(--sub);font-family:'Roboto',sans-serif;font-size:.9rem;font-weight:500;padding:8px 18px;border-radius:8px;cursor:pointer;transition:.2s;position:relative;letter-spacing:.5px}
+.tab-btn:hover{color:#fff;background:var(--border)}
+.tab-btn.active{color:var(--gold);background:rgba(245,197,24,.1)}
+.cart-badge{position:absolute;top:2px;right:6px;background:var(--gold);color:#000;font-size:.6rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s}
+.cart-badge.show{opacity:1}
+
+/* PAGES */
+.page{display:none;padding-top:80px;min-height:100vh}
+.page.active{display:block}
+
+/* SHOP */
+.shop-header{text-align:center;padding:30px 20px 10px}
+.shop-header h1{font-size:2rem;font-weight:900;color:#fff}
+.shop-header h1 span{color:var(--gold)}
+.shop-header p{color:var(--sub);margin-top:6px;font-size:.9rem}
+.free-ship-banner{background:linear-gradient(90deg,#0a3d0a,#1a6b1a,#0a3d0a);color:#4ade80;text-align:center;padding:10px;font-size:.85rem;font-weight:600;margin:10px 20px;border-radius:8px;border:1px solid #1a6b1a}
+
+/* CATEGORY */
+.category{padding:20px}
+.cat-title{font-size:1rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:30px}
+@media(min-width:600px){.grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:.3s;cursor:default}
+.card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 12px 30px rgba(245,197,24,.12)}
+.card-img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#111}
+.card-body{padding:12px}
+.card-title{font-size:.82rem;font-weight:600;color:#fff;margin-bottom:6px;line-height:1.3;min-height:32px}
+.card-price{font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:10px}
+.add-btn{width:100%;padding:9px;background:var(--gold);color:#000;border:none;border-radius:8px;font-family:'Roboto',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:.5px}
+.add-btn:hover{background:#ffd700;transform:scale(1.02)}
+.add-btn:active{transform:scale(.97)}
+
+/* CART PAGE */
+.cart-page{max-width:680px;margin:0 auto;padding:20px}
+.cart-page h2{font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:20px}
+.empty-cart{text-align:center;padding:60px 20px;color:var(--sub)}
+.empty-cart .icon{font-size:3rem;margin-bottom:12px}
+.cart-items{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.cart-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:14px}
+.ci-name{flex:1;font-size:.9rem;font-weight:500;color:#fff}
+.ci-price{color:var(--gold);font-weight:700;font-size:.9rem;white-space:nowrap}
+.ci-qty{display:flex;align-items:center;gap:8px}
+.qty-btn{background:var(--border);border:none;color:#fff;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.15s}
+.qty-btn:hover{background:var(--gold);color:#000}
+.ci-qty span{min-width:20px;text-align:center;font-weight:600}
+.remove-btn{background:none;border:none;color:#555;cursor:pointer;font-size:1.1rem;transition:.15s;padding:4px}
+.remove-btn:hover{color:#f55}
+
+/* SUMMARY */
+.summary-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:20px}
+.summary-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.9rem}
+.summary-row:last-child{border:none;font-size:1.05rem;font-weight:700;color:#fff;padding-top:10px}
+.summary-row span:last-child{color:var(--gold)}
+.free-tag{color:#4ade80;font-weight:600;font-size:.85rem}
+
+/* FORM */
+.form-section h3{font-size:1rem;font-weight:700;color:#fff;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--sub);margin-bottom:5px;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.form-group input,.form-group textarea{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'Roboto',sans-serif;font-size:.9rem;padding:11px 14px;outline:none;transition:.2s}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(245,197,24,.15)}
+.form-group textarea{resize:vertical;min-height:80px}
+
+/* ORDER BTN */
+.order-btn{width:100%;padding:16px;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;border-radius:12px;font-family:'Roboto',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:10px;letter-spacing:.5px;margin-top:6px}
+.order-btn:hover{filter:brightness(1.1);transform:scale(1.01)}
+.order-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--gold);color:#000;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.9rem;transition:.3s;z-index:999;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Elite <span>Foot</span> Maroc</div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('shop')">🛍️ Boutique</button>
+    <button class="tab-btn" onclick="showPage('cart')" id="cart-tab">🛒 Panier<span class="cart-badge" id="badge">0</span></button>
+  </div>
+</nav>
+
+<!-- SHOP PAGE -->
+<div class="page active" id="page-shop">
+  <div class="shop-header">
+    <h1>Elite <span>Foot</span> Maroc</h1>
+    <p>Équipements de football premium — Livraison nationale</p>
+  </div>
+  <div class="free-ship-banner">🇲🇦 Livraison Gratuite partout au Maroc sur toutes les commandes !</div>
+
+  <div class="category">
+    <div class="cat-title">⚽ Maillots — 350 DH</div>
+    <div class="grid" id="grid-maillots"></div>
+  </div>
+  <div class="category">
+    <div class="cat-title">👟 Crampons</div>
+    <div class="grid" id="grid-crampons"></div>
+  </div>
+  <div class="category">
+    <div class="cat-title">🔵 Ballons — 400 DH</div>
+    <div class="grid" id="grid-ballons"></div>
+  </div>
+</div>
+
+<!-- CART PAGE -->
+<div class="page" id="page-cart">
+  <div class="cart-page">
+    <h2>🛒 Mon Panier</h2>
+    <div class="free-ship-banner" style="margin:0 0 16px">🇲🇦 Livraison Gratuite partout au Maroc 🎉</div>
+    <div id="cart-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PRODUCTS = {
+  maillots: [
+    {id:'m1',name:'Maroc Home 2026',price:350,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Flag_of_Morocco.svg/200px-Flag_of_Morocco.svg.png',color:'#c00'},
+    {id:'m2',name:'Maroc Away 2026',price:350,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Flag_of_Morocco.svg/200px-Flag_of_Morocco.svg.png',color:'#fff'},
+    {id:'m3',name:'Allemagne Home',price:350,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Flag_of_Germany.svg/200px-Flag_of_Germany.svg.png',color:'#fff'},
+    {id:'m4',name:'Allemagne Pink',price:350,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Flag_of_Germany.svg/200px-Flag_of_Germany.svg.png',color:'#1a2e4a'},
+    {id:'m5',name:'Real Madrid Home',price:350,img:'https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/200px-Real_Madrid_CF.svg.png',color:'#fff'},
+    {id:'m6',name:'Real Madrid Third',price:350,img:'https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/200px-Real_Madrid_CF.svg.png',color:'#003087'},
+    {id:'m7',name:'Barça 125 ans',price:350,img:'https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/200px-FC_Barcelona_%28crest%29.svg.png',color:'#004d98'},
+    {id:'m8',name:'Barça Aurora',price:350,img:'https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/200px-FC_Barcelona_%28crest%29.svg.png',color:'#ff69b4'},
+    {id:'m9',name:'PSG Black/Pink',price:350,img:'https://upload.wikimedia.org/wikipedia/en/thumb/a/a7/Paris_Saint-Germain_F.C..svg/200px-Paris_Saint-Germain_F.C..svg.png',color:'#111'},
+    {id:'m10',name:'AC Milan Home',price:350,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_of_AC_Milan.svg/200px-Logo_of_AC_Milan.svg.png',color:'#c00'},
+    {id:'m11',name:'Liverpool Home',price:350,img:'https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/Liverpool_FC.svg/200px-Liverpool_FC.svg.png',color:'#c00'},
+  ],
+  crampons: [
+    {id:'c1',name:'Adidas F50 Jaune TF',price:550,img:'https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/enUS/Images/f50-club-turf-boots-p-3rSOMz_d_700.jpg'},
+    {id:'c2',name:'Adidas Predator Gold FG',price:500,img:'https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/enUS/Images/predator-elite-fg-boots-p-GXxO3J_d_700.jpg'},
+    {id:'c3',name:'Adidas Predator Blue FG',price:500,img:'https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/enUS/Images/predator-elite-fg-boots-p-GXxO3J_d_700.jpg'},
+    {id:'c4',name:'Adidas Predator Noir/Rouge',price:500,img:'https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/enUS/Images/predator-elite-fg-boots-p-GXxO3J_d_700.jpg'},
+    {id:'c5',name:'Predator Bleu Ciel/Vert',price:500,img:'https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/enUS/Images/predator-elite-fg-boots-p-GXxO3J_d_700.jpg'},
+    {id:'c6',name:'X Speedportal Rose TF',price:550,img:'https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/enUS/Images/f50-club-turf-boots-p-3rSOMz_d_700.jpg'},
+  ],
+  ballons: [
+    {id:'b1',name:'UCL Official Match Ball',price:400,img:'https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/enUS/Images/champions-league-pro-ball-p-VEy9Qs_d_700.jpg'},
+    {id:'b2',name:'Select Brillant Super',price:400,img:'https://www.select-sport.com/media/catalog/product/cache/1/image/700x700/9df78eab33525d08d6e5fb8d27136e95/3/6/365733_ballonselectbrillant_2.jpg'},
+    {id:'b3',name:'Al Rihla Match Ball',price:400,img:'https://brand.assets.adidas.com/image/upload/f_auto,q_auto,fl_lossy/enUS/Images/al-rihla-pro-ball-p-HK4824_d_700.jpg'},
+  ]
+};
+
+// Use product images from the user's uploaded photos as emoji placeholders
+const IMG_MAP = {
+  m1:'🇲🇦',m2:'🇲🇦',m3:'🇩🇪',m4:'🇩🇪',m5:'⚽',m6:'⚽',m7:'⚽',m8:'⚽',m9:'⚽',m10:'⚽',m11:'⚽',
+  c1:'👟',c2:'👟',c3:'👟',c4:'👟',c5:'👟',c6:'👟',
+  b1:'⚽',b2:'⚽',b3:'⚽'
+};
+
+// Product backgrounds from images context
+const BG_MAP = {
+  m1:'linear-gradient(135deg,#b22222,#8b0000)',
+  m2:'linear-gradient(135deg,#f5f5f5,#e0e0e0)',
+  m3:'linear-gradient(135deg,#f0f0f0,#ddd)',
+  m4:'linear-gradient(135deg,#1a3a5c,#0a1a2e)',
+  m5:'linear-gradient(135deg,#f0f0f0,#ddd)',
+  m6:'linear-gradient(135deg,#003087,#001a4a)',
+  m7:'linear-gradient(135deg,#004d98,#a50034)',
+  m8:'linear-gradient(135deg,#ff8fb1,#e75480)',
+  m9:'linear-gradient(135deg,#111,#333)',
+  m10:'linear-gradient(135deg,#c00,#000)',
+  m11:'linear-gradient(135deg,#c8102e,#8b0000)',
+  c1:'linear-gradient(135deg,#aaff00,#7acc00)',
+  c2:'linear-gradient(135deg,#f5c518,#c9a000)',
+  c3:'linear-gradient(135deg,#1565c0,#003087)',
+  c4:'linear-gradient(135deg,#111,#ff3333)',
+  c5:'linear-gradient(135deg,#87ceeb,#1565c0)',
+  c6:'linear-gradient(135deg,#ff69b4,#8a2be2)',
+  b1:'linear-gradient(135deg,#333,#111)',
+  b2:'linear-gradient(135deg,#1565c0,#c8102e)',
+  b3:'linear-gradient(135deg,#fff,#eee)',
+};
+
+// Actual product visuals mapping to uploaded images
+const REAL_IMGS = {
+  m1: null, // will use gradient + emoji
+};
+
+let cart = [];
+
+function buildCard(p) {
+  return `<div class="card">
+    <div style="background:${BG_MAP[p.id]||'#222'};aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:3.5rem">
+      ${IMG_MAP[p.id]||'⚽'}
+    </div>
+    <div class="card-body">
+      <div class="card-title">${p.name}</div>
+      <div class="card-price">${p.price} DH</div>
+      <button class="add-btn" onclick="addToCart('${p.id}')">+ Ajouter au panier</button>
+    </div>
+  </div>`;
+}
+
+function renderShop() {
+  const cats = [['maillots','grid-maillots'],['crampons','grid-crampons'],['ballons','grid-ballons']];
+  cats.forEach(([key,gid]) => {
+    document.getElementById(gid).innerHTML = PRODUCTS[key].map(buildCard).join('');
+  });
+}
+
+function findProduct(id) {
+  for(const k of Object.keys(PRODUCTS)) {
+    const p = PRODUCTS[k].find(x=>x.id===id);
+    if(p) return p;
+  }
+  return null;
+}
+
+function addToCart(id) {
+  const existing = cart.find(i=>i.id===id);
+  if(existing) existing.qty++;
+  else { const p=findProduct(id); if(p) cart.push({...p,qty:1}); }
+  updateBadge();
+  showToast('✅ Ajouté au panier !');
+}
+
+function updateBadge() {
+  const total = cart.reduce((s,i)=>s+i.qty,0);
+  const badge = document.getElementById('badge');
+  badge.textContent = total;
+  badge.classList.toggle('show', total>0);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(p==='cart') renderCart();
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i=>i.id===id);
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty<=0) cart = cart.filter(i=>i.id!==id);
+  updateBadge();
+  renderCart();
+}
+
+function renderCart() {
+  const el = document.getElementById('cart-content');
+  if(cart.length===0) {
+    el.innerHTML=`<div class="empty-cart"><div class="icon">🛒</div><p>Votre panier est vide</p><p style="font-size:.8rem;margin-top:8px">Ajoutez des articles depuis la boutique</p></div>`;
+    return;
+  }
+  const total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+  const itemsHTML = cart.map(i=>`
+    <div class="cart-item">
+      <div style="background:${BG_MAP[i.id]||'#222'};width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">${IMG_MAP[i.id]||'⚽'}</div>
+      <div class="ci-name">${i.name}</div>
+      <div class="ci-qty">
+        <button class="qty-btn" onclick="changeQty('${i.id}',-1)">−</button>
+        <span>${i.qty}</span>
+        <button class="qty-btn" onclick="changeQty('${i.id}',1)">+</button>
+      </div>
+      <div class="ci-price">${i.price*i.qty} DH</div>
+      <button class="remove-btn" onclick="changeQty('${i.id}',-999)" title="Supprimer">🗑️</button>
+    </div>`).join('');
+
+  el.innerHTML=`
+    <div class="cart-items">${itemsHTML}</div>
+    <div class="summary-box">
+      ${cart.map(i=>`<div class="summary-row"><span>${i.name} ×${i.qty}</span><span>${i.price*i.qty} DH</span></div>`).join('')}
+      <div class="summary-row"><span>Livraison</span><span class="free-tag">GRATUITE 🇲🇦</span></div>
+      <div class="summary-row"><span>Total</span><span>${total} DH</span></div>
+    </div>
+    <div class="form-section">
+      <h3>📦 Informations de Livraison</h3>
+      <div class="form-group"><label>Nom Complet *</label><input id="f-name" type="text" placeholder="Ex: Ahmed Benali" required></div>
+      <div class="form-group"><label>Numéro WhatsApp *</label><input id="f-phone" type="tel" placeholder="Ex: 06 12 34 56 78" required></div>
+      <div class="form-group"><label>Adresse de Livraison *</label><textarea id="f-addr" placeholder="Numéro, Rue, Quartier, Ville..." required></textarea></div>
+      <button class="order-btn" onclick="sendOrder()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Commander via WhatsApp
+      </button>
+    </div>`;
+}
+
+function sendOrder() {
+  const name = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const addr = document.getElementById('f-addr').value.trim();
+  if(!name||!phone||!addr){showToast('⚠️ Veuillez remplir tous les champs !');return;}
+  const total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+  const lines = cart.map(i=>`• ${i.name} ×${i.qty} = ${i.price*i.qty} DH`).join('\n');
+  const msg = `🛍️ *NOUVELLE COMMANDE — Elite Foot Maroc*\n\n*📦 Articles commandés :*\n${lines}\n\n*💰 Total : ${total} DH*\n*🚚 Livraison : GRATUITE*\n\n*👤 Client :*\n• Nom : ${name}\n• Tél/WhatsApp : ${phone}\n• Adresse : ${addr}`;
+  const encoded = encodeURIComponent(msg);
+  window.open(`https://wa.me/212677087344?text=${encoded}`,'_blank');
+}
+
+renderShop();
+</script>
+</body>
+</html>

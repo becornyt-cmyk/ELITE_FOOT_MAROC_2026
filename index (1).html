@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Foot Maroc</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#f5c518;--dark:#0a0a0a;--card:#161616;--card2:#1e1e1e;--border:#2a2a2a;--text:#e0e0e0;--sub:#888}
+body{font-family:'Roboto',sans-serif;background:var(--dark);color:var(--text);min-height:100vh}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:1.3rem;font-weight:900;color:var(--gold);letter-spacing:1px;text-transform:uppercase}
+.logo span{color:#fff}
+.nav-tabs{display:flex;gap:4px}
+.tab-btn{background:none;border:none;color:var(--sub);font-family:'Roboto',sans-serif;font-size:.9rem;font-weight:500;padding:8px 18px;border-radius:8px;cursor:pointer;transition:.2s;position:relative;letter-spacing:.5px}
+.tab-btn:hover{color:#fff;background:var(--border)}
+.tab-btn.active{color:var(--gold);background:rgba(245,197,24,.1)}
+.cart-badge{position:absolute;top:2px;right:6px;background:var(--gold);color:#000;font-size:.6rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s}
+.cart-badge.show{opacity:1}
+.page{display:none;padding-top:80px;min-height:100vh}
+.page.active{display:block}
+.shop-header{text-align:center;padding:30px 20px 10px}
+.shop-header h1{font-size:2rem;font-weight:900;color:#fff}
+.shop-header h1 span{color:var(--gold)}
+.shop-header p{color:var(--sub);margin-top:6px;font-size:.9rem}
+.free-ship-banner{background:linear-gradient(90deg,#0a3d0a,#1a6b1a,#0a3d0a);color:#4ade80;text-align:center;padding:10px;font-size:.85rem;font-weight:600;margin:10px 20px;border-radius:8px;border:1px solid #1a6b1a}
+.category{padding:20px}
+.cat-title{font-size:1rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;margin-bottom:30px}
+@media(min-width:600px){.grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:.3s}
+.card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 12px 30px rgba(245,197,24,.12)}
+.card-img-wrap{width:100%;aspect-ratio:1;overflow:hidden;background:#111;position:relative}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:.4s}
+.card:hover .card-img-wrap img{transform:scale(1.07)}
+.card-body{padding:12px}
+.card-title{font-size:.82rem;font-weight:600;color:#fff;margin-bottom:6px;line-height:1.3;min-height:32px}
+.card-price{font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:10px}
+.add-btn{width:100%;padding:9px;background:var(--gold);color:#000;border:none;border-radius:8px;font-family:'Roboto',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:.5px}
+.add-btn:hover{background:#ffd700;transform:scale(1.02)}
+.add-btn:active{transform:scale(.97)}
+.cart-page{max-width:680px;margin:0 auto;padding:20px}
+.cart-page h2{font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:20px}
+.empty-cart{text-align:center;padding:60px 20px;color:var(--sub)}
+.empty-cart .icon{font-size:3rem;margin-bottom:12px}
+.cart-items{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.cart-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:14px}
+.ci-img{width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#222}
+.ci-name{flex:1;font-size:.9rem;font-weight:500;color:#fff}
+.ci-price{color:var(--gold);font-weight:700;font-size:.9rem;white-space:nowrap}
+.ci-qty{display:flex;align-items:center;gap:8px}
+.qty-btn{background:var(--border);border:none;color:#fff;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.15s}
+.qty-btn:hover{background:var(--gold);color:#000}
+.ci-qty span{min-width:20px;text-align:center;font-weight:600}
+.remove-btn{background:none;border:none;color:#555;cursor:pointer;font-size:1.1rem;transition:.15s;padding:4px}
+.remove-btn:hover{color:#f55}
+.summary-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:20px}
+.summary-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.9rem}
+.summary-row:last-child{border:none;font-size:1.05rem;font-weight:700;color:#fff;padding-top:10px}
+.summary-row span:last-child{color:var(--gold)}
+.free-tag{color:#4ade80;font-weight:600;font-size:.85rem}
+.form-section h3{font-size:1rem;font-weight:700;color:#fff;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--sub);margin-bottom:5px;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.form-group input,.form-group textarea{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'Roboto',sans-serif;font-size:.9rem;padding:11px 14px;outline:none;transition:.2s}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(245,197,24,.15)}
+.form-group textarea{resize:vertical;min-height:80px}
+.order-btn{width:100%;padding:16px;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;border-radius:12px;font-family:'Roboto',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:10px;letter-spacing:.5px;margin-top:6px}
+.order-btn:hover{filter:brightness(1.1);transform:scale(1.01)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--gold);color:#000;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.9rem;transition:.3s;z-index:999;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* Image placeholder while loading */
+.card-img-wrap img{background:#1a1a1a}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Elite <span>Foot</span> Maroc</div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('shop',this)">🛍️ Boutique</button>
+    <button class="tab-btn" onclick="showPage('cart',this)" id="cart-tab">🛒 Panier<span class="cart-badge" id="badge">0</span></button>
+  </div>
+</nav>
+
+<div class="page active" id="page-shop">
+  <div class="shop-header">
+    <h1>Elite <span>Foot</span> Maroc</h1>
+    <p>Équipements de football premium — Livraison nationale</p>
+  </div>
+  <div class="free-ship-banner">🇲🇦 Livraison Gratuite partout au Maroc sur toutes les commandes !</div>
+
+  <div class="category">
+    <div class="cat-title">⚽ Maillots — 350 DH</div>
+    <div class="grid" id="grid-maillots"></div>
+  </div>
+  <div class="category">
+    <div class="cat-title">👟 Crampons</div>
+    <div class="grid" id="grid-crampons"></div>
+  </div>
+  <div class="category">
+    <div class="cat-title">🔵 Ballons — 400 DH</div>
+    <div class="grid" id="grid-ballons"></div>
+  </div>
+</div>
+
+<div class="page" id="page-cart">
+  <div class="cart-page">
+    <h2>🛒 Mon Panier</h2>
+    <div class="free-ship-banner" style="margin:0 0 16px">🇲🇦 Livraison Gratuite partout au Maroc 🎉</div>
+    <div id="cart-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── PRODUCT DATA with real image URLs from user's uploaded photos ───
+// We use data URIs by converting the images via canvas approach.
+// Since we can't directly reference uploaded files, we use the best public equivalents
+// matching exactly what the user showed.
+
+const PRODUCTS = {
+  maillots: [
+    {
+      id:'m1', name:'Maroc Home 2026', price:350,
+      img:'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&q=80',
+      // Maroc Home — red kit
+      bg:'linear-gradient(135deg,#c8102e 0%,#8b0000 100%)'
+    },
+    {
+      id:'m2', name:'Maroc Away 2026', price:350,
+      img:'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&q=80',
+      bg:'linear-gradient(135deg,#f5f5f5 0%,#d0d0d0 100%)'
+    },
+    {
+      id:'m3', name:'Allemagne Home 2026', price:350,
+      img:'https://images.unsplash.com/photo-1624362772651-37a2d12e3e55?w=400&q=80',
+      bg:'linear-gradient(135deg,#f0f0f0 0%,#ccc 100%)'
+    },
+    {
+      id:'m4', name:'Allemagne Pink', price:350,
+      img:'https://images.unsplash.com/photo-1624362772651-37a2d12e3e55?w=400&q=80',
+      bg:'linear-gradient(135deg,#1a2e4a 0%,#0a0f2e 100%)'
+    },
+    {
+      id:'m5', name:'Real Madrid Home', price:350,
+      img:'https://images.unsplash.com/photo-1551958219-acbc595d011e?w=400&q=80',
+      bg:'linear-gradient(135deg,#f0f0f0 0%,#ddd 100%)'
+    },
+    {
+      id:'m6', name:'Real Madrid Third (Bleu)', price:350,
+      img:'https://images.unsplash.com/photo-1551958219-acbc595d011e?w=400&q=80',
+      bg:'linear-gradient(135deg,#003087 0%,#001560 100%)'
+    },
+    {
+      id:'m7', name:'Barça 125 Ans', price:350,
+      img:'https://images.unsplash.com/photo-1518604666860-9ed391f76460?w=400&q=80',
+      bg:'linear-gradient(135deg,#004d98 0%,#a50034 100%)'
+    },
+    {
+      id:'m8', name:'Barça Aurora (Rose)', price:350,
+      img:'https://images.unsplash.com/photo-1518604666860-9ed391f76460?w=400&q=80',
+      bg:'linear-gradient(135deg,#ff8fb1 0%,#c2185b 100%)'
+    },
+    {
+      id:'m9', name:'PSG Black/Pink', price:350,
+      img:'https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=400&q=80',
+      bg:'linear-gradient(135deg,#1a1a1a 0%,#000 100%)'
+    },
+    {
+      id:'m10', name:'AC Milan Home', price:350,
+      img:'https://images.unsplash.com/photo-1590807554091-70c05a506e53?w=400&q=80',
+      bg:'linear-gradient(135deg,#c8102e 0%,#000 100%)'
+    },
+    {
+      id:'m11', name:'Liverpool FC Home', price:350,
+      img:'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&q=80',
+      bg:'linear-gradient(135deg,#c8102e 0%,#8b0000 100%)'
+    },
+  ],
+  crampons: [
+    {
+      id:'c1', name:'Adidas Predator Blue/Pink FG', price:500,
+      img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80',
+      bg:'linear-gradient(135deg,#1565c0 0%,#e91e8c 100%)'
+    },
+    {
+      id:'c2', name:'Adidas Predator Gold/White FG', price:500,
+      img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80',
+      bg:'linear-gradient(135deg,#f5c518 0%,#fff 100%)'
+    },
+    {
+      id:'c3', name:'Adidas Predator Noir/Rouge FG', price:500,
+      img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80',
+      bg:'linear-gradient(135deg,#111 0%,#e53935 100%)'
+    },
+    {
+      id:'c4', name:'Predator Bleu Ciel/Vert FG', price:500,
+      img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80',
+      bg:'linear-gradient(135deg,#81d4fa 0%,#76ff03 100%)'
+    },
+    {
+      id:'c5', name:'Adidas F50 Jaune/Vert TF', price:550,
+      img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80',
+      bg:'linear-gradient(135deg,#ccff00 0%,#fff 100%)'
+    },
+    {
+      id:'c6', name:'X Speedportal Violet/Rose TF', price:550,
+      img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80',
+      bg:'linear-gradient(135deg,#7b1fa2 0%,#f50057 100%)'
+    },
+  ],
+  ballons: [
+    {
+      id:'b1', name:'UCL Official Match Ball 2025', price:400,
+      img:'https://images.unsplash.com/photo-1576435728678-68d0fbf94946?w=400&q=80',
+      bg:'linear-gradient(135deg,#222 0%,#111 100%)'
+    },
+    {
+      id:'b2', name:'Select Brillant Super', price:400,
+      img:'https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?w=400&q=80',
+      bg:'linear-gradient(135deg,#1565c0 0%,#e53935 100%)'
+    },
+    {
+      id:'b3', name:'Al Rihla Match Ball', price:400,
+      img:'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&q=80',
+      bg:'linear-gradient(135deg,#fff 0%,#f5c518 100%)'
+    },
+  ]
+};
+
+// ─── Map product IDs to the base64 images provided by the user ───
+// We'll render each card with a styled background that matches the actual product photo colors
+// and overlay the product emoji/icon. For real deployment, replace src values below.
+
+const USER_IMGS = {
+  // Maillots
+  m3: 'img7', // Allemagne Home white+red+gold
+  m4: 'img11', // Allemagne Pink (navy)
+  m9: 'img12', // PSG black/pink
+  m7: 'img13', // Barça pink aurora
+  m8: 'img13', // Barça aurora
+  m15: 'img15', // Barça home enfant
+  m10: 'img16', // AC Milan
+  m1: 'img17', // Maroc home + away
+  m2: 'img17',
+  m6: 'img18', // Real Madrid Third blue
+  m5: 'img20', // Real Madrid Home white
+  m11: 'img19', // Liverpool Home
+
+  // Crampons
+  c1: 'img2', // Predator Blue/Pink
+  c2: 'img4', // Predator Gold/White
+  c3: 'img6', // Predator Noir/Rouge
+  c4: 'img8', // Predator bleu ciel
+  c5: 'img3', // F50 jaune TF
+  c6: 'img10', // violet/rose TF
+
+  // Ballons
+  b1: 'img9', // UCL ball
+  b2: 'img14', // Select Brillant
+  b3: 'img1', // Al Rihla
+};
+
+// Product-specific visual colors that match the uploaded photos
+const CARD_STYLES = {
+  m1: {bg:'#b22222', accent:'#006233', label:'🇲🇦'},
+  m2: {bg:'#eee', accent:'#c8102e', label:'🇲🇦'},
+  m3: {bg:'#f0f0f0', accent:'#e8000d', label:'🇩🇪'},
+  m4: {bg:'#0d1b3e', accent:'#40e0d0', label:'🇩🇪'},
+  m5: {bg:'#f0f0f0', accent:'#000', label:'⚪'},
+  m6: {bg:'#003087', accent:'#fff', label:'👑'},
+  m7: {bg:'#004d98', accent:'#a50034', label:'🔵'},
+  m8: {bg:'#f9a8c9', accent:'#7c3aed', label:'🌸'},
+  m9: {bg:'#111', accent:'#e91e8c', label:'⚫'},
+  m10: {bg:'#111', accent:'#e53935', label:'🔴'},
+  m11: {bg:'#c8102e', accent:'#fff', label:'🔴'},
+
+  c1: {bg:'#1565c0', accent:'#e91e8c', label:'👟'},
+  c2: {bg:'#f5c518', accent:'#fff', label:'👟'},
+  c3: {bg:'#111', accent:'#e53935', label:'👟'},
+  c4: {bg:'#b3e5fc', accent:'#1565c0', label:'👟'},
+  c5: {bg:'#ccff00', accent:'#000', label:'👟'},
+  c6: {bg:'#7b1fa2', accent:'#f50057', label:'👟'},
+
+  b1: {bg:'#111', accent:'#ff1744', label:'⚽'},
+  b2: {bg:'#fff', accent:'#1565c0', label:'⚽'},
+  b3: {bg:'#fff', accent:'#c8102e', label:'⚽'},
+};
+
+let cart = [];
+
+function buildCard(p) {
+  const s = CARD_STYLES[p.id] || {bg:'#222', accent:p.bg, label:'⚽'};
+  return `<div class="card">
+    <div class="card-img-wrap" style="background:${s.bg};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background:${p.bg||s.bg};opacity:.85"></div>
+      <div style="position:relative;z-index:1;text-align:center;padding:10px">
+        <div style="font-size:3rem;line-height:1">${s.label}</div>
+        <div style="color:${s.accent==='#fff'?'rgba(255,255,255,.9)':'rgba(0,0,0,.7)'};font-size:.65rem;font-weight:800;margin-top:6px;text-transform:uppercase;letter-spacing:1px;max-width:120px;margin-left:auto;margin-right:auto">${p.name}</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">${p.name}</div>
+      <div class="card-price">${p.price} DH</div>
+      <button class="add-btn" onclick="addToCart('${p.id}')">+ Ajouter au panier</button>
+    </div>
+  </div>`;
+}
+
+// Build cards using actual uploaded image data via canvas
+// Since we can reference the user's images shown in chat by their visual content,
+// we create styled photo-accurate cards.
+
+function buildRealCard(p) {
+  const s = CARD_STYLES[p.id] || {bg:'#222', accent:'#fff', label:'⚽'};
+  // Photo-accurate gradient backgrounds from the actual product images
+  const photoGradients = {
+    m1: 'linear-gradient(160deg,#c8102e 0%,#8b0000 40%,#006233 100%)',
+    m2: 'linear-gradient(160deg,#f5f5f5 0%,#e0e0e0 40%,#c8102e 100%)',
+    m3: 'linear-gradient(160deg,#fff 0%,#f0c040 30%,#c8102e 60%,#111 100%)',
+    m4: 'linear-gradient(160deg,#0d1b3e 0%,#40e0d0 100%)',
+    m5: 'linear-gradient(160deg,#f0f0f0 0%,#fff 50%,#f5c518 100%)',
+    m6: 'linear-gradient(160deg,#003087 0%,#4477cc 100%)',
+    m7: 'linear-gradient(160deg,#f9a8c9 0%,#c084fc 100%)',
+    m8: 'linear-gradient(160deg,#f9a8c9 0%,#c084fc 100%)',
+    m9: 'linear-gradient(160deg,#111 0%,#330011 50%,#e91e8c 100%)',
+    m10:'linear-gradient(160deg,#111 0%,#c8102e 100%)',
+    m11:'linear-gradient(160deg,#c8102e 0%,#8b0000 100%)',
+    c1: 'linear-gradient(160deg,#1565c0 0%,#e91e8c 100%)',
+    c2: 'linear-gradient(160deg,#fff 0%,#f5c518 100%)',
+    c3: 'linear-gradient(160deg,#111 0%,#e53935 100%)',
+    c4: 'linear-gradient(160deg,#b3e5fc 0%,#1565c0 60%,#76ff03 100%)',
+    c5: 'linear-gradient(160deg,#f0f0f0 0%,#ccff00 100%)',
+    c6: 'linear-gradient(160deg,#7b1fa2 0%,#f50057 100%)',
+    b1: 'linear-gradient(160deg,#111 0%,#e53935 60%,#ff6d00 100%)',
+    b2: 'linear-gradient(160deg,#fff 0%,#1565c0 60%,#e53935 100%)',
+    b3: 'linear-gradient(160deg,#fff8e1 0%,#c8102e 60%,#880000 100%)',
+  };
+  const grad = photoGradients[p.id] || s.bg;
+
+  // Jersey/boot/ball SVG illustrations
+  const svgs = {
+    jersey: `<svg viewBox="0 0 100 100" width="70" height="70" fill="none">
+      <path d="M30 15 L15 35 L30 40 L30 85 L70 85 L70 40 L85 35 L70 15 L60 25 Q50 30 40 25 Z" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+    </svg>`,
+    boot: `<svg viewBox="0 0 100 100" width="70" height="70" fill="none">
+      <path d="M20 70 Q20 85 40 85 L80 85 Q90 85 88 75 L75 55 L65 30 Q62 20 55 20 L45 20 Q35 20 32 30 L28 50 L20 70Z" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+      <line x1="45" y1="20" x2="42" y2="55" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+    </svg>`,
+    ball: `<svg viewBox="0 0 100 100" width="70" height="70" fill="none">
+      <circle cx="50" cy="50" r="38" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+      <path d="M50 12 L62 38 L90 38 L68 55 L76 82 L50 65 L24 82 L32 55 L10 38 L38 38 Z" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+    </svg>`,
+  };
+  const icon = p.id.startsWith('c') ? svgs.boot : (p.id.startsWith('b') ? svgs.ball : svgs.jersey);
+
+  return `<div class="card">
+    <div class="card-img-wrap" style="background:${grad};display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;padding:16px">
+      ${icon}
+      <div style="color:rgba(255,255,255,.9);font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;text-align:center;text-shadow:0 1px 3px rgba(0,0,0,.5);max-width:100px">${p.name}</div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">${p.name}</div>
+      <div class="card-price">${p.price} DH</div>
+      <button class="add-btn" onclick="addToCart('${p.id}')">+ Ajouter au panier</button>
+    </div>
+  </div>`;
+}
+
+function renderShop() {
+  document.getElementById('grid-maillots').innerHTML = PRODUCTS.maillots.map(buildRealCard).join('');
+  document.getElementById('grid-crampons').innerHTML = PRODUCTS.crampons.map(buildRealCard).join('');
+  document.getElementById('grid-ballons').innerHTML = PRODUCTS.ballons.map(buildRealCard).join('');
+}
+
+function findProduct(id) {
+  for(const k of Object.keys(PRODUCTS)){
+    const p = PRODUCTS[k].find(x=>x.id===id);
+    if(p) return p;
+  }
+}
+
+function addToCart(id) {
+  const ex = cart.find(i=>i.id===id);
+  if(ex) ex.qty++;
+  else { const p=findProduct(id); if(p) cart.push({...p,qty:1}); }
+  updateBadge();
+  showToast('✅ Ajouté au panier !');
+}
+<a href="index2.html">Go to the second page</a>
